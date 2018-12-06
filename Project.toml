@@ -1,0 +1,8 @@
+name = "RoboGrid"
+uuid = "f6eeddda-f941-11e8-2f1d-27cd7e48a4c0"
+authors = ["Dennis Wilson <dennis@d9w.xyz>"]
+version = "0.1.0"
+
+[deps]
+Colors = "5ae59095-9a9b-59fe-a467-6f913c188581"
+YAML = "ddb6d928-2868-570f-bddf-ab3f9cf99eb6"
