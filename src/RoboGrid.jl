@@ -1,14 +1,14 @@
 module RoboGrid
 
 import YAML
-using Colors
 using Random
 # using Reel
 # using Luxor
 
+# empty must be first object, wall must be last object
 global const OBJECT_TYPES = ["empty", "food", "wall"]
-global const ACTIONS = ["move forward", "move backward", "turn left",
-                        "turn right", "paint red", "paint green"]
+global const ACTIONS = ["move forward", "move backward", "turn right",
+                        "turn left", "paint red", "paint green"]
 global const COLORS = ["white", "red", "orange", "yellow", "green", "blue",
                        "purple", "black"]
 
@@ -27,5 +27,8 @@ type_to_float(s::String) = ind_to_float(s, OBJECT_TYPES)
 
 include("cell.jl")
 include("grid.jl")
+include("robot.jl")
+include("episode.jl")
+# include("reward.jl")
 
 end

@@ -9,6 +9,8 @@ function Cell(color::String, obj::String)
     Cell(color_to_float(color), type_to_float(obj))
 end
 
+WallCell = Cell("black", "wall")
+
 function Cell()
     Cell("white", "empty")
 end

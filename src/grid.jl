@@ -11,7 +11,7 @@ function get_empty(cells::Array{Cell}, x::Int64, y::Int64)
     ys = y > 0 ? [y] : shuffle!(collect(1:size(cells, 1)))
     for xi in xs
         for yi in ys
-            if object(cells[yi, xi]) == "empty"
+            if cells[yi, xi].obj == 0.0
                 return xi, yi
             end
         end
