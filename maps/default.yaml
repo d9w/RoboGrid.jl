@@ -1,12 +1,12 @@
 width: 5
 height: 5
 starts:
-  - {x: 3, y: 5}
+  - {x: 5}
 exits:
-  - {x: 1, y: 1}
-  - {x: 5, y: 1}
+  - {}
 objects:
-  - {type: wall, color: black, x: 2, y: 1}
-  - {type: wall, color: black, x: 2, y: 2}
-  - {type: food, color: purple, reward: 1.0, x: 1, y: 1}
-  - {type: food, color: orange, reward: 1.0, x: 5, y: 1}
+  - {type: wall, color: black}
+  - {type: wall, color: black}
+  - {type: wall, color: black}
+  - {type: wall, color: black}
+  - {type: food, color: orange}

@@ -4,9 +4,6 @@ function test_grid(g::Grid)
         @test c.obj >= 0.0
         @test c.color <= 1.0
         @test c.color >= 0.0
-        @test c.ostr in RoboGrid.OBJECT_TYPES
-        @test c.reward <= 1.0
-        @test c.reward >= 0.0
     end
     @test length(g.starts) > 0
     for s in g.starts
@@ -20,17 +17,19 @@ function test_grid(g::Grid)
     end
 end
 
+@testset "Default grid" begin
+    g = Grid("maps/default.yaml")
+    test_grid(g)
+end
+
 @testset "T-maze grid" begin
-    g = Grid()
+    g = Grid("maps/tmaze.yaml")
     test_grid(g)
     nfood = 0
-    reward = 0
     for c in g.cells
-        if c.ostr == "food"
+        if RoboGrid.object(c) == "food"
             nfood += 1
         end
-        reward += c.reward
     end
     @test nfood == 2
-    @test reward == 2.0
 end
