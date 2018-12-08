@@ -29,6 +29,6 @@ include("cell.jl")
 include("grid.jl")
 include("robot.jl")
 include("episode.jl")
-# include("reward.jl")
+include("reward.jl")
 
 end

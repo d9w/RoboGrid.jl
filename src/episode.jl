@@ -11,16 +11,19 @@ no_reward(e::Episode) = 0
 
 function Episode(g::Grid; reward::Function=no_reward, meta::Dict=Dict())
     robot = Robot(g)
+    meta["step"] = 0
+    meta["t"] = 0.0
+    meta["memory"] = 0
     Episode(robot, g, reward, meta)
 end
 
 function get_inputs(e::Episode)
     inputs = Array{Float64}(undef, 0)
-    for dx in -1:1
-        for dy in -1:1
+    for dy in -1:1
+        for dx in -1:1
             c = get(e.grid.cells, (e.robot.y + dy, e.robot.x + dx), WallCell)
-            push!(inputs, c.color)
             push!(inputs, c.obj)
+            push!(inputs, c.color)
         end
     end
     inputs
@@ -53,14 +56,27 @@ function step!(e::Episode, controller::Function)
     step!(e, output)
 end
 
-function run!(e::Episode, controller::Function, terminate::Function)
+no_terminate(e::Episode) = false
+
+function run!(e::Episode, controller::Function;
+              terminate::Function=no_terminate)
     linds = LinearIndices(e.grid.cells)
     total_reward = 0.0
     while true
-        total_reward += step!(e, controller)
-        if (terminate(episode) || (linds[e.robot.y, e.robot.x] in e.grid.exits))
+        rew, t, bytes, gctime, memallocs = @timed step!(e, controller)
+        total_reward += rew
+        e.meta["step"] += 1
+        e.meta["t"] += t
+        e.meta["memory"] += bytes
+        if (terminate(e) || (linds[e.robot.y, e.robot.x] in e.grid.exits))
             break
         end
     end
     total_reward
+end
+
+# example terminate function
+function terminate(e::Episode; steps::Int64=100, t::Float64=10.0,
+                   memory::Int64=1073741824)
+    e.meta["step"] >= steps || e.meta["t"] >= t || e.meta["memory"] >= memory
 end
