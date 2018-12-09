@@ -18,13 +18,24 @@ function Episode(g::Grid; reward::Function=no_reward, meta::Dict=Dict())
 end
 
 function get_inputs(e::Episode)
+    # TODO: orient these based on robot direction
     inputs = Array{Float64}(undef, 0)
+    cids = Array{Int64}(undef, (3, 3))
+    linds = LinearIndices(e.grid.cells)
+    i = 1
     for dy in -1:1
         for dx in -1:1
-            c = get(e.grid.cells, (e.robot.y + dy, e.robot.x + dx), WallCell)
-            push!(inputs, c.obj)
-            push!(inputs, c.color)
+            cids[i] = get(linds, (e.robot.y + dy, e.robot.x + dx), 0)
+            i += 1
         end
+    end
+    if e.robot.d > 0
+        cids = [rotr90, rot180, rotl90][e.robot.d](cids)
+    end
+    for cid in cids
+        c = get(e.grid.cells, cid, WallCell)
+        push!(inputs, c.obj)
+        push!(inputs, c.color)
     end
     inputs
 end
