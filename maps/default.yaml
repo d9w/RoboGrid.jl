@@ -6,7 +6,4 @@ exits:
   - {}
 objects:
   - {type: wall, color: black}
-  - {type: wall, color: black}
-  - {type: wall, color: black}
-  - {type: wall, color: black}
   - {type: food, color: orange}

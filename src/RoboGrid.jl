@@ -30,5 +30,6 @@ include("grid.jl")
 include("robot.jl")
 include("episode.jl")
 include("reward.jl")
+include("fitness/morris.jl")
 
 end

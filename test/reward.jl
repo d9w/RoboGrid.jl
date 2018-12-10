@@ -13,10 +13,12 @@ function coverage_robot(inputs::Array{Float64})
     rand(1:4)
 end
 
+no_terminate(e::Episode) = false
+
 @testset "Exit reward" begin
     e = Episode(Grid(), reward=RoboGrid.exit_reward)
-    total_reward = run!(e, coverage_robot)
-    println("Found exit in ", e.meta["step"], " steps, ", e.meta["t"], " s, ",
+    total_reward = run!(e, coverage_robot; terminate=no_terminate)
+    println("Found exit in ", e.meta["step"], " steps, ", e.meta["time"], " s, ",
             e.meta["memory"], " bytes")
     @test total_reward == 1.0
 end
@@ -26,8 +28,8 @@ end
     foodind = findfirst([RoboGrid.object(c) == "food" for c in g.cells])
     g.exits[1] = LinearIndices(g.cells)[foodind]
     e = Episode(g, reward=RoboGrid.food_reward)
-    total_reward = run!(e, coverage_robot)
-    println("Found food in ", e.meta["step"], " steps, ", e.meta["t"], " s, ",
+    total_reward = run!(e, coverage_robot; terminate=no_terminate)
+    println("Found food in ", e.meta["step"], " steps, ", e.meta["time"], " s, ",
             e.meta["memory"], " bytes")
     @test total_reward == 1.0
     @test sum(map(c->RoboGrid.object(c) == "food", e.grid.cells)) == 0
@@ -35,12 +37,12 @@ end
 
 @testset "Coverage reward" begin
     e = Episode(Grid(), reward=RoboGrid.coverage_reward)
-    total_reward = run!(e, coverage_robot)
-    println("Found exit in ", e.meta["step"], " steps, ", e.meta["t"], " s, ",
+    total_reward = run!(e, coverage_robot; terminate=no_terminate)
+    println("Found exit in ", e.meta["step"], " steps, ", e.meta["time"], " s, ",
             e.meta["memory"], " bytes")
-    ngreen = sum(map(c->RoboGrid.color(c) == "green", e.grid.cells))
-    println("Covered $ngreen cells for $total_reward")
-    @test total_reward > 1
-    # @test abs(total_reward - ngreen) <= 1
+    visited = sum(e.meta["visited"])
+    println("Covered $visited cells for $total_reward")
+    @test total_reward >= 1
+    @test visited == total_reward
 end
 

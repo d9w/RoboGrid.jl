@@ -5,16 +5,19 @@ function test_grid(g::Grid)
         @test c.color <= 1.0
         @test c.color >= 0.0
     end
-    @test length(g.starts) > 0
     for s in g.starts
         @test s >= 1
         @test s <= length(g.cells)
     end
-    @test length(g.exits) > 0
     for e in g.exits
         @test e >= 1
         @test e <= length(g.cells)
     end
+end
+
+@testset "Empty grid" begin
+    g = Grid("maps/default.yaml")
+    test_grid(g)
 end
 
 @testset "Default grid" begin

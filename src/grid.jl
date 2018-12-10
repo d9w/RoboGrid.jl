@@ -19,13 +19,12 @@ function get_empty(cells::Array{Cell}, x::Int64, y::Int64)
     error("No empty cell found for $x, $y")
 end
 
-function Grid(map::String="maps/default.yaml")
-    m = YAML.load_file(map)
+function Grid(m::Dict)
     cells = Array{Cell}(undef, m["height"], m["width"])
     for i in eachindex(cells)
         cells[i] = Cell()
     end
-    for o in m["objects"]
+    for o in get(m, "objects", [])
         color = get(o, "color", "white")
         obj = get(o, "type", "empty")
         x = get(o, "x", 0)
@@ -62,12 +61,10 @@ function Grid(map::String="maps/default.yaml")
             end
             push!(exits, inds[y, x])
         end
-    else
-        for i in eachindex(cells)
-            if object(cell) != "wall"
-                push!(exits, i)
-            end
-        end
     end
     Grid(cells, starts, exits)
+end
+
+function Grid(map::String="maps/default.yaml")
+    Grid(YAML.load_file(map))
 end

@@ -1,7 +1,7 @@
 function test_episode(e::Episode, controller::Function)
     for i in 1:10
         inputs = get_inputs(e)
-        @test length(inputs) == 18
+        @test length(inputs) == 19
         @test all(inputs .>= 0.0)
         @test all(inputs .<= 1.0)
         output = controller(inputs)
@@ -21,12 +21,11 @@ end
 end
 
 @testset "Run and terminate" begin
-    e = Episode(Grid())
+    e = Episode(Grid(); meta=Dict{String, Any}("max_step"=>10))
     c(x::Array{Float64}) = rand(1:length(RoboGrid.ACTIONS))
-    terminate(e::Episode) = RoboGrid.terminate(e; steps=10)
-    total_reward = run!(e, c; terminate=terminate)
+    total_reward = run!(e, c)
     @test total_reward == 0.0
-    @test e.meta["step"] <= 10
-    @test e.meta["t"] <= 10.0
-    @test e.meta["memory"] <= 1073741824
+    @test e.meta["step"] <= e.meta["max_step"]
+    @test e.meta["time"] <= e.meta["max_time"]
+    @test e.meta["memory"] <= e.meta["max_memory"]
 end

@@ -11,15 +11,17 @@ no_reward(e::Episode) = 0
 
 function Episode(g::Grid; reward::Function=no_reward, meta::Dict=Dict())
     robot = Robot(g)
-    meta["step"] = 0
-    meta["t"] = 0.0
-    meta["memory"] = 0
+    meta["step"] = get(meta, "step", 0)
+    meta["max_step"] = get(meta, "max_step", 100)
+    meta["time"] = get(meta, "time", 0.0)
+    meta["max_time"] = get(meta, "max_time", 10.0)
+    meta["memory"] = get(meta, "memory", 0)
+    meta["max_memory"] = get(meta, "max_memory", 1073741824)
+    meta["reward"] = get(meta, "reward", 0.0)
     Episode(robot, g, reward, meta)
 end
 
 function get_inputs(e::Episode)
-    # TODO: orient these based on robot direction
-    inputs = Array{Float64}(undef, 0)
     cids = Array{Int64}(undef, (3, 3))
     linds = LinearIndices(e.grid.cells)
     i = 1
@@ -32,10 +34,14 @@ function get_inputs(e::Episode)
     if e.robot.d > 0
         cids = [rotr90, rot180, rotl90][e.robot.d](cids)
     end
+    inputs = Array{Float64}(undef, 19)
+    inputs[1] = e.meta["reward"]
+    i = 2
     for cid in cids
         c = get(e.grid.cells, cid, WallCell)
-        push!(inputs, c.obj)
-        push!(inputs, c.color)
+        inputs[i] = c.obj
+        inputs[i+1] = c.color
+        i += 2
     end
     inputs
 end
@@ -54,7 +60,8 @@ function step!(e::Episode, action::Int64)
     elseif action == 6
         e.grid.cells[e.robot.y, e.robot.x].color = color_to_float("green")
     end
-    e.reward(e)
+    e.meta["reward"] = e.reward(e)
+    e.meta["reward"]
 end
 
 function step!(e::Episode, actions::AbstractArray)
@@ -67,27 +74,24 @@ function step!(e::Episode, controller::Function)
     step!(e, output)
 end
 
-no_terminate(e::Episode) = false
+function terminate(e::Episode)
+    (e.meta["step"] >= e.meta["max_step"] ||
+     e.meta["time"] >= e.meta["max_time"] ||
+     e.meta["memory"] >= e.meta["max_memory"])
+end
 
-function run!(e::Episode, controller::Function;
-              terminate::Function=no_terminate)
+function run!(e::Episode, controller::Function; terminate::Function=terminate)
     linds = LinearIndices(e.grid.cells)
     total_reward = 0.0
     while true
         rew, t, bytes, gctime, memallocs = @timed step!(e, controller)
         total_reward += rew
         e.meta["step"] += 1
-        e.meta["t"] += t
+        e.meta["time"] += t
         e.meta["memory"] += bytes
         if (terminate(e) || (linds[e.robot.y, e.robot.x] in e.grid.exits))
             break
         end
     end
     total_reward
-end
-
-# example terminate function
-function terminate(e::Episode; steps::Int64=100, t::Float64=10.0,
-                   memory::Int64=1073741824)
-    e.meta["step"] >= steps || e.meta["t"] >= t || e.meta["memory"] >= memory
 end
