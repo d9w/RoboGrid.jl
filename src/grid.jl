@@ -46,7 +46,7 @@ function Grid(m::Dict)
         end
     else
         for i in eachindex(cells)
-            if object(cell) != "wall"
+            if object(cells[i]) != "wall"
                 push!(starts, i)
             end
         end

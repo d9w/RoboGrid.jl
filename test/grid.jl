@@ -36,3 +36,8 @@ end
     end
     @test nfood == 2
 end
+
+@testset "Cross grid" begin
+    g = Grid("maps/cross.yaml")
+    test_grid(g)
+end

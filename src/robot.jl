@@ -1,3 +1,5 @@
+export Robot, move!, turn_right!, turn_left!
+
 mutable struct Robot
     x::Int64
     y::Int64
@@ -20,14 +22,18 @@ end
 
 function move!(r::Robot, g::Grid; forward::Bool=true)
     f = forward ? 1 : -1
-    if mod(r.d, 2) == 0
-        dy = r.d == 0 ? 1 : -1
-        newx, newy = r.x, min(size(g.cells, 2), max(1, r.y + f * dy))
+    if r.d == 0
+        newx, newy = r.x, r.y - f
+    elseif r.d == 1
+        newx, newy = r.x + f, r.y
+    elseif r.d == 2
+        newx, newy = r.x, r.y + f
     else
-        dx = r.d == 1 ? 1 : -1
-        newx, newy = min(size(g.cells, 2), max(1, r.y + f * dx)), r.y
+        newx, newy = r.x - f, r.y
     end
-    if g.cells[newy, newx].obj != 1.0
+    newx = min(size(g.cells, 2), max(1, newx))
+    newy = min(size(g.cells, 1), max(1, newy))
+    if object(g.cells[newy, newx]) != "wall"
         r.x = newx
         r.y = newy
     end

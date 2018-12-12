@@ -35,12 +35,12 @@ function json(i::CGPInd)
 end
 
 function generation(e::Evolution)
+    fits = [RoboGrid.coverage_fitness, RoboGrid.water_search_fitness,
+            RoboGrid.water_memorize_fitness, RoboGrid.cross_search_fitness,
+            RoboGrid.cross_memorize_fitness, RoboGrid.cross_strategy_fitness]
     for i in e.population
         i.seed = floor(Int64, e.gen / 10)
-        if e.gen > e.cfg["goal_gen"]
-            i.func = RoboGrid.find_exit_fitness
-        elseif e.gen > 2 * e.cfg["goal_gen"]
-            i.func = RoboGrid.memorize_exit_fitness
-        end
+        func = floor(Int64, e.gen / e.cfg["goal_gen"]) + 1
+        i.func = fits[func]
     end
 end

@@ -34,14 +34,14 @@ function get_inputs(e::Episode)
     if e.robot.d > 0
         cids = [rotr90, rot180, rotl90][e.robot.d](cids)
     end
-    inputs = Array{Float64}(undef, 19)
+    inputs = Array{Float64}(undef, 10)
     inputs[1] = e.meta["reward"]
     i = 2
     for cid in cids
         c = get(e.grid.cells, cid, WallCell)
         inputs[i] = c.obj
-        inputs[i+1] = c.color
-        i += 2
+        # inputs[i+1] = c.color
+        i += 1
     end
     inputs
 end

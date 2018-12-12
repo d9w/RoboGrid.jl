@@ -1,7 +1,7 @@
 function test_episode(e::Episode, controller::Function)
     for i in 1:10
         inputs = get_inputs(e)
-        @test length(inputs) == 19
+        @test length(inputs) == 10
         @test all(inputs .>= 0.0)
         @test all(inputs .<= 1.0)
         output = controller(inputs)

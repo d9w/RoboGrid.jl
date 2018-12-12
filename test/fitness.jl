@@ -15,10 +15,22 @@ rand_cont(x::Array{Float64}) = rand(1:4)
     test_fitness(RoboGrid.coverage_fitness, rand_cont)
 end
 
-@testset "Find exit fitness" begin
-    test_fitness(RoboGrid.find_exit_fitness, rand_cont)
+@testset "Water search fitness" begin
+    test_fitness(RoboGrid.water_search_fitness, rand_cont)
 end
 
-@testset "Memorize exit" begin
-    test_fitness(RoboGrid.memorize_exit_fitness, rand_cont)
+@testset "Water memorize fitness" begin
+    test_fitness(RoboGrid.water_memorize_fitness, rand_cont)
+end
+
+@testset "Cross search fitness" begin
+    test_fitness(RoboGrid.cross_search_fitness, rand_cont)
+end
+
+@testset "Cross memorize fitness" begin
+    test_fitness(RoboGrid.cross_memorize_fitness, rand_cont)
+end
+
+@testset "Cross strategy fitness" begin
+    test_fitness(RoboGrid.cross_strategy_fitness, rand_cont)
 end

@@ -3,7 +3,7 @@ using YAML
 using Distributed
 
 @everywhere include("evo/robo.jl")
-@everywhere r(i::Individual) = robo_eval(i, 19, length(RoboGrid.ACTIONS))
+@everywhere r(i::Individual) = robo_eval(i, 10, length(RoboGrid.ACTIONS))
 
 s = ArgParse.ArgParseSettings()
 
@@ -19,7 +19,7 @@ args = ArgParse.parse_args(s)
 cfg = YAML.load_file(args["cfg"])
 cfg["seed"] = args["seed"]
 cfg["n_fitness"] = 1
-cfg["nin"] = 19
+cfg["nin"] = 10
 cfg["nout"] = length(RoboGrid.ACTIONS)
 
 e = Evolution(CGPInd, cfg; id=args["id"], logfile=args["log"])
