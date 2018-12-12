@@ -17,13 +17,11 @@ end
 function coverage_fitness(cont_f::Function; seed::Int64=0)
     r = MersenneTwister(seed)
     map = morris_map(r)
-    objects = Array{Dict{String, Any}}(undef, 0)
-    for x in 1:map["width"]
-        for y in 1:map["height"]
-            push!(objects, Dict("x"=>x, "y"=>y, "type"=>"food", "color"=>"orange"))
-        end
+    g = Grid(map)
+    for c in g.cells
+        c.obj = type_to_float("food")
     end
-    e = Episode(Grid(map); reward=food_reward, meta=morris_meta())
+    e = Episode(g; reward=food_reward, meta=morris_meta())
     total_reward = run!(e, cont_f; terminate=cov_terminate)
     steps = terminate(e) ? e.meta["max_step"] : e.meta["step"]
     (total_reward + (1.0 - steps / e.meta["max_step"])) / (length(e.grid.cells) + 1)
