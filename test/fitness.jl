@@ -12,9 +12,7 @@ end
 rand_cont(x::Array{Float64}) = rand(1:4)
 
 @testset "Coverage fitness" begin
-    test_fitness(RoboGrid.coverage_fitness, rand_cont;
-                 maxfit=Float64(RoboGrid.morris_map["height"] *
-                                RoboGrid.morris_map["width"]))
+    test_fitness(RoboGrid.coverage_fitness, rand_cont; maxfit=2.0)
 end
 
 @testset "Find exit fitness" begin
