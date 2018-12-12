@@ -36,7 +36,7 @@ end
 
 function generation(e::Evolution)
     for i in e.population
-        i.seed = e.gen
+        i.seed = floor(Int64, e.gen / 10)
         if e.gen > e.cfg["goal_gen"]
             i.func = RoboGrid.find_exit_fitness
         elseif e.gen > 2 * e.cfg["goal_gen"]

@@ -12,7 +12,7 @@ end
 rand_cont(x::Array{Float64}) = rand(1:4)
 
 @testset "Coverage fitness" begin
-    test_fitness(RoboGrid.coverage_fitness, rand_cont; maxfit=2.0)
+    test_fitness(RoboGrid.coverage_fitness, rand_cont)
 end
 
 @testset "Find exit fitness" begin
@@ -20,5 +20,5 @@ end
 end
 
 @testset "Memorize exit" begin
-    test_fitness(RoboGrid.memorize_exit_fitness, rand_cont; maxfit=6.0)
+    test_fitness(RoboGrid.memorize_exit_fitness, rand_cont)
 end

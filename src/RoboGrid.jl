@@ -8,7 +8,7 @@ using Random
 # empty must be first object, wall must be last object
 global const OBJECT_TYPES = ["empty", "food", "wall"]
 global const ACTIONS = ["move forward", "move backward", "turn right",
-                        "turn left", "paint red", "paint green"]
+                        "turn left"]
 global const COLORS = ["white", "red", "orange", "yellow", "green", "blue",
                        "purple", "black"]
 
