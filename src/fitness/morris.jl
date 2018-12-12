@@ -44,14 +44,15 @@ function find_exit_fitness(cont_f::Function; seed::Int64=0)
 end
 
 function memorize_exit_fitness(cont_f::Function; seed::Int64=0)
-    map = food_exit_map(seed)
-    for i in 1:5
+    for i in 1:3
+        map = food_exit_map(seed)
         e = Episode(Grid(map); reward=food_reward, meta=morris_meta())
         run!(e, cont_f)
         if terminate(e)
             return i / 6
         end
     end
+    map = food_exit_map(seed)
     delete!(map, "objects")
     e = Episode(Grid(map); meta=morris_meta())
     run!(e, cont_f)
