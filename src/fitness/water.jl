@@ -44,18 +44,6 @@ function water_search_fitness(cont_f::Function; seed::Int64=0)
 end
 
 function water_memorize_fitness(cont_f::Function; seed::Int64=0)
-    for i in 1:5
-        map = food_exit_map(seed)
-        e = Episode(Grid(map); reward=food_reward, meta=water_meta())
-        run!(e, cont_f)
-        if terminate(e)
-            return i / 6
-        end
-    end
-    map = food_exit_map(seed)
-    delete!(map, "objects")
-    e = Episode(Grid(map); meta=water_meta())
-    run!(e, cont_f)
-    steps = terminate(e) ? e.meta["max_step"] : e.meta["step"]
-    (6 - steps / e.meta["max_step"]) / 6
+    map_function() = food_exit_map(seed)
+    learn_fitness(cont_f, map_function, water_meta)
 end

@@ -30,6 +30,7 @@ include("grid.jl")
 include("robot.jl")
 include("episode.jl")
 include("reward.jl")
+include("fitness/learn.jl")
 include("fitness/water.jl")
 include("fitness/cross.jl")
 

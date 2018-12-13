@@ -25,17 +25,8 @@ function cross_search_fitness(cont_f::Function; seed::Int64=0)
 end
 
 function cross_memorize_fitness(cont_f::Function; seed::Int64=0)
-    for i in 1:5
-        e = Episode(Grid(cross_map(seed)); reward=food_reward, meta=cross_meta())
-        run!(e, cont_f)
-        if terminate(e)
-            return i / 6
-        end
-    end
-    e = Episode(Grid(cross_map(seed)); reward=food_reward, meta=cross_meta())
-    run!(e, cont_f)
-    steps = terminate(e) ? e.meta["max_step"] : e.meta["step"]
-    (6 - steps / e.meta["max_step"]) / 6
+    map_function() = cross_map(seed)
+    learn_fitness(cont_f, map_function, cross_meta)
 end
 
 function cross_map(r::MersenneTwister, strategy::Int64)
@@ -52,17 +43,6 @@ end
 function cross_strategy_fitness(cont_f::Function; seed::Int64=0)
     r = MersenneTwister(seed)
     strategy = rand(r, 1:3)
-    for i in 1:5
-        e = Episode(Grid(cross_map(r, strategy));
-                    reward=food_reward, meta=cross_meta())
-        run!(e, cont_f)
-        if terminate(e)
-            return i / 6
-        end
-    end
-    e = Episode(Grid(cross_map(r, strategy));
-                reward=food_reward, meta=cross_meta())
-    run!(e, cont_f)
-    steps = terminate(e) ? e.meta["max_step"] : e.meta["step"]
-    (6 - steps / e.meta["max_step"]) / 6
+    map_function() = cross_map(r, strategy)
+    learn_fitness(cont_f, map_function, cross_meta)
 end

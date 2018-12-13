@@ -20,7 +20,7 @@ end
 end
 
 @testset "Water memorize fitness" begin
-    test_fitness(RoboGrid.water_memorize_fitness, rand_cont)
+    test_fitness(RoboGrid.water_memorize_fitness, rand_cont; minfit=-7.0)
 end
 
 @testset "Cross search fitness" begin
@@ -28,9 +28,9 @@ end
 end
 
 @testset "Cross memorize fitness" begin
-    test_fitness(RoboGrid.cross_memorize_fitness, rand_cont)
+    test_fitness(RoboGrid.cross_memorize_fitness, rand_cont; minfit=-7.0)
 end
 
 @testset "Cross strategy fitness" begin
-    test_fitness(RoboGrid.cross_strategy_fitness, rand_cont)
+    test_fitness(RoboGrid.cross_strategy_fitness, rand_cont; minfit=-7.0)
 end

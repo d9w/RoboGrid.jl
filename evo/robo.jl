@@ -39,8 +39,8 @@ function generation(e::Evolution)
             RoboGrid.water_memorize_fitness, RoboGrid.cross_search_fitness,
             RoboGrid.cross_memorize_fitness, RoboGrid.cross_strategy_fitness]
     for i in e.population
-        i.seed = floor(Int64, e.gen / 10)
-        func = floor(Int64, e.gen / e.cfg["goal_gen"]) + 1
+        i.seed = floor(Int64, (e.gen - 1) / 10)
+        func = mod(floor(Int64, (e.gen - 1) / e.cfg["goal_gen"]), length(fits)) + 1
         i.func = fits[func]
     end
 end
