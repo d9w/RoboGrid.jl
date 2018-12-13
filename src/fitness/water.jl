@@ -1,5 +1,5 @@
 function water_map(r::MersenneTwister)
-    w = 5; h = 5
+    w = 7; h = 7
     map = Dict{String, Any}("height" => h, "width"  => w)
     sx, sy = rand(r, [(1, 1), (1, w), (h, 1), (h, w)])
     map["starts"] = [Dict("x"=>sx, "y"=>sy)]
@@ -7,7 +7,7 @@ function water_map(r::MersenneTwister)
 end
 
 function water_meta()
-    Dict{String, Any}("max_step" => 100)
+    Dict{String, Any}("max_step" => 500)
 end
 
 function cov_terminate(e::Episode)
@@ -30,7 +30,7 @@ end
 function food_exit_map(seed::Int64=0)
     r = MersenneTwister(seed)
     map = water_map(r)
-    ex, ey = rand(r, 2:4), rand(r, 2:4)
+    ex, ey = rand(r, 3:5), rand(r, 3:5)
     map["exits"] = [Dict("x"=>ex, "y"=>ey)]
     map["objects"] = [Dict("type"=>"food", "color"=>"orange", "x"=>ex, "y"=>ey)]
     map
