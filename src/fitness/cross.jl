@@ -5,6 +5,8 @@ function cross_map(r::MersenneTwister)
     exit = rand(r, setdiff(exits, start))
     map["starts"] = [Dict("x"=>start[2], "y"=>start[1])]
     map["exits"] = [Dict("x"=>exit[2], "y"=>exit[1])]
+    push!(map["objects"], Dict("type"=>"food", "color"=>"green",
+                               "x"=>exit[2], "y"=>exit[1]))
     map
 end
 

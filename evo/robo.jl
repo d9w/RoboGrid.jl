@@ -35,8 +35,7 @@ function json(i::CGPInd)
 end
 
 function generation(e::Evolution)
-    fits = [RoboGrid.coverage_fitness, RoboGrid.water_search_fitness,
-            RoboGrid.water_memorize_fitness, RoboGrid.cross_search_fitness,
+  fits = [RoboGrid.coverage_fitness, RoboGrid.water_memorize_fitness,
             RoboGrid.cross_memorize_fitness, RoboGrid.cross_strategy_fitness]
     for i in e.population
         i.seed = floor(Int64, (e.gen - 1) / 10)
