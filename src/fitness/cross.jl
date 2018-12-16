@@ -2,7 +2,7 @@ function cross_map(r::MersenneTwister)
     map = YAML.load_file("maps/cross.yaml")
     exits = [(4, 1), (1, 4), (4, 7), (7, 4)]
     start = rand(r, exits)
-    exit = rand(r, setdiff(exits, start))
+    exit = rand(r, setdiff(exits, [start]))
     map["starts"] = [Dict("x"=>start[2], "y"=>start[1])]
     map["exits"] = [Dict("x"=>exit[2], "y"=>exit[1])]
     push!(map["objects"], Dict("type"=>"food", "color"=>"green",
@@ -16,7 +16,7 @@ function cross_map(seed::Int64)
 end
 
 function cross_meta()
-    Dict{String, Any}("max_step" => 500)
+    Dict{String, Any}("max_step" => 100)
 end
 
 function cross_search_fitness(cont_f::Function; seed::Int64=0)
@@ -39,6 +39,8 @@ function cross_map(r::MersenneTwister, strategy::Int64)
     exit = exits[mod((si-1)+strategy, 4)+1]
     map["starts"] = [Dict("x"=>start[2], "y"=>start[1])]
     map["exits"] = [Dict("x"=>exit[2], "y"=>exit[1])]
+    push!(map["objects"], Dict("type"=>"food", "color"=>"green",
+                               "x"=>exit[2], "y"=>exit[1]))
     map
 end
 
