@@ -14,6 +14,36 @@ function test_episode(e::Episode, controller::Function)
     end
 end
 
+@testset "Inputs" begin
+    g = Grid("maps/empty.yaml")
+    e = Episode(g)
+    obj = rand()
+    g.cells[e.robot.y, e.robot.x].obj = obj
+    inputs = get_inputs(e)
+    orig_inputs = copy(inputs)
+    @test inputs[1] == 0.0
+    @test inputs[3] == RoboGrid.type_to_float("wall")
+    @test inputs[6] == obj
+    RoboGrid.turn_left!(e.robot)
+    inputs = get_inputs(e)
+    @test inputs[1] == 0.0
+    @test inputs[3] == RoboGrid.type_to_float("wall")
+    @test inputs[6] == obj
+    RoboGrid.turn_left!(e.robot)
+    inputs = get_inputs(e)
+    @test inputs[1] == 0.0
+    @test inputs[3] == RoboGrid.type_to_float("empty")
+    @test inputs[6] == obj
+    RoboGrid.turn_left!(e.robot)
+    inputs = get_inputs(e)
+    @test inputs[1] == 0.0
+    @test inputs[3] == RoboGrid.type_to_float("empty")
+    @test inputs[6] == obj
+    RoboGrid.turn_left!(e.robot)
+    inputs = get_inputs(e)
+    @test all(inputs .== orig_inputs)
+end
+
 @testset "Random controller" begin
     e = Episode(Grid())
     c(x::Array{Float64}) = rand(1:length(RoboGrid.ACTIONS))
